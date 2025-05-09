@@ -1,10 +1,11 @@
+# Use the official Python image
 FROM python:3.10-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies required by Playwright and its browsers
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Install system dependencies required by Playwright and browsers
+RUN apt-get update && apt-get install -y \
     libnss3 \
     libatk1.0-0 \
     libatk-bridge2.0-0 \
@@ -69,7 +70,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install Playwright and its browsers
-RUN pip install playwright && playwright install --with-deps
+RUN pip install playwright
+RUN playwright install --with-deps
 
 # Copy the application code
 COPY . .
