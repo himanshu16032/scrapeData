@@ -26,43 +26,10 @@ RUN apt-get update && apt-get install -y \
     libxcursor1 \
     libxfixes3 \
     libgtk-3-0 \
-    libgtk-4-1 \
     libgdk-pixbuf2.0-0 \
     libpangocairo-1.0-0 \
     libcairo-gobject2 \
     libcairo2 \
-    libgraphene-1.0-0 \
-    libgstreamer1.0-0 \
-    libgstreamer-gl1.0-0 \
-    libgstreamer-plugins-base1.0-0 \
-    libgstallocators-1.0-0 \
-    libgstapp-1.0-0 \
-    libgstbase-1.0-0 \
-    libgstpbutils-1.0-0 \
-    libgstaudio-1.0-0 \
-    libgstgl-1.0-0 \
-    libgsttag-1.0-0 \
-    libgstvideo-1.0-0 \
-    libgstcodecparsers-1.0-0 \
-    libgstfft-1.0-0 \
-    libavif15 \
-    libenchant-2-2 \
-    libsecret-1-0 \
-    libmanette-0.2-0 \
-    libwoff2dec0 \
-    libwebpdemux2 \
-    libwebpmux3 \
-    libharfbuzz-icu0 \
-    libhyphen0 \
-    libpsl5 \
-    libnghttp2-14 \
-    libGLESv2-2 \
-    libatomic1 \
-    libxslt1.1 \
-    libopus0 \
-    libevent-2.1-7 \
-    libx264-160 \
-    flite \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
