@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
+from fastapi.responses import JSONResponse
 
 from Controller.pojo.LinkDataResponse import getLinkDataResponse
 from Controller.pojo.LinkDataRequest import getLinkDataRequest
@@ -33,7 +34,9 @@ app = FastAPI(lifespan=lifespan)
 # async def on_shutdown():
 #     await close_browser()
 
-
+@app.get("/", include_in_schema=False)
+async def health():
+    return JSONResponse({"status": "ok"})
 @app.post("/getLinkData", response_model=getLinkDataResponse)
 async def process_person(getLinkDataRequest: getLinkDataRequest):
     response = await MyntraDataScrapeService.action(getLinkDataRequest)
@@ -41,5 +44,5 @@ async def process_person(getLinkDataRequest: getLinkDataRequest):
 
 
 # Run the application with uvicorn when this script is executed directly
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+# if __name__ == "__main__":
+#     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
