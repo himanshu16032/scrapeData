@@ -52,11 +52,19 @@ playwright_context = {
 
 
 async def init_browser():
-    playwright = await async_playwright().start()
-    browser = await playwright.firefox.launch(headless=True)
-    playwright_context["playwright"] = playwright
+    pw = await async_playwright().start()
+    # Launch Chromium headless with sandbox disabled
+    browser = await pw.firefox.launch(
+        headless=True,
+        args=[
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",       # avoids /dev/shm issues
+            "--disable-gpu",                 # GPU off since headless
+        ]
+    )
+    playwright_context["playwright"] = pw
     playwright_context["browser"] = browser
-
 
 async def close_browser():
     await playwright_context["browser"].close()
