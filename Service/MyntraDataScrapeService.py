@@ -54,7 +54,7 @@ playwright_context = {
 async def init_browser():
     pw = await async_playwright().start()
     # Launch Chromium headless with sandbox disabled
-    browser = await pw.firefox.launch(
+    browser = await pw.chromium.launch(
         headless=True,
         args=[
             "--no-sandbox",
