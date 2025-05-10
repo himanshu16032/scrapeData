@@ -1,5 +1,5 @@
 # Use the official Python image
-FROM python:3.10-slim
+FROM mcr.microsoft.com/playwright/python:latest
 
 # Set the working directory
 WORKDIR /app
@@ -38,7 +38,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Install Playwright and its browsers
 RUN pip install playwright
-RUN playwright install firefox --with-deps
+RUN playwright install  --with-deps
 
 # Copy the application code
 COPY . .
