@@ -6,3 +6,7 @@ import uvicorn
 
 class getLinkDataRequest(BaseModel):
     link: str
+
+
+class test(BaseModel):
+    number : int

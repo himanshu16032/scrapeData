@@ -6,7 +6,7 @@ from typing import List, Optional
 from fastapi.responses import JSONResponse
 
 from Controller.pojo.LinkDataResponse import getLinkDataResponse
-from Controller.pojo.LinkDataRequest import getLinkDataRequest
+from Controller.pojo.LinkDataRequest import getLinkDataRequest, test
 
 # from Service.MyntraDataScrapeService import init_browser, close_browser
 import uvicorn
@@ -47,8 +47,13 @@ async def process_person(getLinkDataRequest: getLinkDataRequest):
 
 
 @app.post("/getLinkData2", response_model=getLinkDataResponse)
-async def process_person(getLinkDataRequest: getLinkDataRequest):
-    response = Test.action()
+async def process_person(test: test):
+    if(test.number == 1):
+        response = Test.action()
+    elif(test.number == 2):
+        response = Test.action2()
+    elif(test.number == 3):
+        response = Test.action3()
     return response
 
 
