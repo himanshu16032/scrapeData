@@ -12,7 +12,7 @@ from Controller.pojo.LinkDataRequest import getLinkDataRequest
 import uvicorn
 
 from Service import MyntraDataScrapeService
-
+from Service import Test
 # Create FastAPI instance
 
 
@@ -44,6 +44,14 @@ async def health():
 async def process_person(getLinkDataRequest: getLinkDataRequest):
     response = await MyntraDataScrapeService.action(getLinkDataRequest)
     return response
+
+
+@app.post("/getLinkData2", response_model=getLinkDataResponse)
+async def process_person(getLinkDataRequest: getLinkDataRequest):
+    response = Test.action()
+    return response
+
+
 
 
 # Run the application with uvicorn when this script is executed directly
