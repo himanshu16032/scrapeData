@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from Controller.pojo.LinkDataResponse import getLinkDataResponse
 from Controller.pojo.LinkDataRequest import getLinkDataRequest
 
-from Service.MyntraDataScrapeService import init_browser, close_browser
+# from Service.MyntraDataScrapeService import init_browser, close_browser
 import uvicorn
 
 from Service import MyntraDataScrapeService
@@ -17,14 +17,14 @@ from Service import MyntraDataScrapeService
 
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await init_browser()
-    yield
-    await close_browser()
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     await init_browser()
+#     yield
+#     await close_browser()
 
 #
-app = FastAPI(lifespan=lifespan)
+# app = FastAPI(lifespan=lifespan)
 # @app.on_event("startup")
 # async def on_startup():
 #     await init_browser()
@@ -34,6 +34,9 @@ app = FastAPI(lifespan=lifespan)
 # async def on_shutdown():
 #     await close_browser()
 
+
+
+app = FastAPI()
 @app.get("/", include_in_schema=False)
 async def health():
     return JSONResponse({"status": "ok"})

@@ -1,4 +1,4 @@
-from playwright.async_api import async_playwright
+# from playwright.async_api import async_playwright
 
 from Receiver.getUrlHtmlDataReceiver import *
 from Controller.pojo.LinkDataRequest import *
@@ -7,12 +7,14 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
-from playwright.sync_api import sync_playwright
+
+# from playwright.sync_api import sync_playwright
 
 
 async def action(getLinkDataRequest: getLinkDataRequest):
     name, description, price, priceCurrency, availability = fetchData(getLinkDataRequest.link)
-    return getLinkDataResponse(description=description, price=convert_price_to_decimal(price), name = name,  priceCurrency = priceCurrency, availability = availability)
+    return getLinkDataResponse(description=description, price=convert_price_to_decimal(price), name=name,
+                               priceCurrency=priceCurrency, availability=availability)
 
 
 def fetchData(url: str):
@@ -60,70 +62,71 @@ def fetchData(url: str):
     return name, description, price, priceCurrency, availability
 
 
-async def fetch_description(URL):
-    print("given link ", URL)
-    browser = get_browser()
-    print("step1")
-    context = await browser.new_context()
-    print("step2")
-    page = await context.new_page()
-    print("step3")
-
-    try:
-        await page.goto(URL, wait_until="domcontentloaded")
-        print("step4")
-        await page.wait_for_selector(".pdp-name", timeout=20_000)
-        print("step5")
-        desc = await page.locator(".pdp-name").inner_text()
-        price = await page.locator(".pdp-price").inner_text()
-        return desc, price
-    except Exception as e:
-        print(f"Error fetching data: {e}")
-        return None, None
-    finally:
-        await page.close()
-        await context.close()
+# async def fetch_description(URL):
+#     print("given link ", URL)
+#     browser = get_browser()
+#     print("step1")
+#     context = await browser.new_context()
+#     print("step2")
+#     page = await context.new_page()
+#     print("step3")
+#
+#     try:
+#         await page.goto(URL, wait_until="domcontentloaded")
+#         print("step4")
+#         await page.wait_for_selector(".pdp-name", timeout=20_000)
+#         print("step5")
+#         desc = await page.locator(".pdp-name").inner_text()
+#         price = await page.locator(".pdp-price").inner_text()
+#         return desc, price
+#     except Exception as e:
+#         print(f"Error fetching data: {e}")
+#         return None, None
+#     finally:
+#         await page.close()
+#         await context.close()
 
 
 # global_browser.py
 from playwright.sync_api import sync_playwright
 
+
 #
 # playwright = None
 # browser = None
 
-playwright_context = {
-    "playwright": None,
-    "browser": None
-}
+# playwright_context = {
+#     "playwright": None,
+#     "browser": None
+# }
 
 
-async def init_browser():
-    pw = await async_playwright().start()
-    # Launch Chromium headless with sandbox disabled
-    browser = await pw.firefox.launch(
-        headless=True,
-        args=[
-            "--no-sandbox",
-            "--disable-setuid-sandbox",
-            "--disable-dev-shm-usage",  # avoids /dev/shm issues
-            "--disable-gpu",  # GPU off since headless
-        ]
-    )
-    playwright_context["playwright"] = pw
-    playwright_context["browser"] = browser
+# async def init_browser():
+#     pw = await async_playwright().start()
+#     # Launch Chromium headless with sandbox disabled
+#     browser = await pw.firefox.launch(
+#         headless=True,
+#         args=[
+#             "--no-sandbox",
+#             "--disable-setuid-sandbox",
+#             "--disable-dev-shm-usage",  # avoids /dev/shm issues
+#             "--disable-gpu",  # GPU off since headless
+#         ]
+#     )
+#     playwright_context["playwright"] = pw
+#     playwright_context["browser"] = browser
 
 
-async def close_browser():
-    await playwright_context["browser"].close()
-    await playwright_context["playwright"].stop()
+# async def close_browser():
+#     await playwright_context["browser"].close()
+#     await playwright_context["playwright"].stop()
 
 
-def get_browser():
-    browser = playwright_context.get("browser")
-    if browser is None:
-        raise RuntimeError("Browser not initialized. Make sure init_browser() has been called.")
-    return browser
+# def get_browser():
+#     browser = playwright_context.get("browser")
+#     if browser is None:
+#         raise RuntimeError("Browser not initialized. Make sure init_browser() has been called.")
+#     return browser
 
 
 def convert_price_to_decimal(price_string):
