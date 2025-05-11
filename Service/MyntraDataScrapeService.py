@@ -3,18 +3,65 @@ from playwright.async_api import async_playwright
 from Receiver.getUrlHtmlDataReceiver import *
 from Controller.pojo.LinkDataRequest import *
 from Controller.pojo.LinkDataResponse import *
+import requests
+import json
+from bs4 import BeautifulSoup
 
 from playwright.sync_api import sync_playwright
 
 
 async def action(getLinkDataRequest: getLinkDataRequest):
-    desc, price = await fetch_description(getLinkDataRequest.link)
-    print(desc, price)
-    return getLinkDataResponse(description=desc, price=convert_price_to_decimal(price))
+    name, description, price, priceCurrency, availability = fetchData(getLinkDataRequest.link)
+    return getLinkDataResponse(description=description, price=convert_price_to_decimal(price), name = name,  priceCurrency = priceCurrency, availability = availability)
+
+
+def fetchData(url: str):
+    print("got link to parse ", url)
+    headers = {"User-Agent": "Mozilla/5.0"}
+    resp = requests.get(url, headers=headers)
+    resp.raise_for_status()
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    # Find all JSON-LD scripts and pick the one where "@type": "Product"
+    product_data = None
+    for tag in soup.find_all("script", {"type": "application/ld+json"}):
+        try:
+            data = json.loads(tag.string)
+        except (json.JSONDecodeError, TypeError):
+            continue
+
+        # It may be a list or a dict
+        items = data if isinstance(data, list) else [data]
+        for item in items:
+            if item.get("@type") == "Product":
+                product_data = item
+                break
+        if product_data:
+            break
+
+    if not product_data:
+        raise ValueError("No Product JSON-LD block found")
+
+    # Extract fields
+    name = product_data.get("name")
+    description = product_data.get("description")
+    offers = product_data.get("offers", {})
+    price = offers.get("price")
+    priceCurrency = offers.get("priceCurrency")
+    availability = offers.get("availability")
+
+    print(f"Name:        {name}")
+    print(f"Description: {description}")
+    print(f"Price:       {price}")
+    print(f"Price Currency: {priceCurrency}")
+    print(f"Availability: {availability}")
+
+    return name, description, price, priceCurrency, availability
 
 
 async def fetch_description(URL):
-    print("given link ",URL)
+    print("given link ", URL)
     browser = get_browser()
     print("step1")
     context = await browser.new_context()
@@ -54,17 +101,18 @@ playwright_context = {
 async def init_browser():
     pw = await async_playwright().start()
     # Launch Chromium headless with sandbox disabled
-    browser = await pw.webkit.launch(
+    browser = await pw.firefox.launch(
         headless=True,
         args=[
             "--no-sandbox",
             "--disable-setuid-sandbox",
-            "--disable-dev-shm-usage",       # avoids /dev/shm issues
-            "--disable-gpu",                 # GPU off since headless
+            "--disable-dev-shm-usage",  # avoids /dev/shm issues
+            "--disable-gpu",  # GPU off since headless
         ]
     )
     playwright_context["playwright"] = pw
     playwright_context["browser"] = browser
+
 
 async def close_browser():
     await playwright_context["browser"].close()
@@ -76,6 +124,7 @@ def get_browser():
     if browser is None:
         raise RuntimeError("Browser not initialized. Make sure init_browser() has been called.")
     return browser
+
 
 def convert_price_to_decimal(price_string):
     """
