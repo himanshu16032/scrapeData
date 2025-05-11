@@ -21,6 +21,7 @@ def fetchData(url: str):
     print("got link to parse ", url)
     headers = {"User-Agent": "Mozilla/5.0"}
     resp = requests.get(url, headers=headers)
+    print(resp.text)
     resp.raise_for_status()
 
     soup = BeautifulSoup(resp.text, "html.parser")
