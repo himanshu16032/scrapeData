@@ -18,13 +18,34 @@ async def action(getLinkDataRequest: getLinkDataRequest):
 
 
 def fetchData(url: str):
-    print("got link to parse ", url)
-    headers = {"User-Agent": "Mozilla/5.0"}
-    resp = requests.get(url, headers=headers)
-    print(resp.text)
-    resp.raise_for_status()
+    session = requests.Session()
 
-    soup = BeautifulSoup(resp.text, "html.parser")
+    # 1. Pretend to be a real browser
+    session.headers.update({
+        "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) "
+                       "Chrome/114.0.0.0 Safari/537.36"),
+        "Accept": ("text/html,application/xhtml+xml,application/xml;"
+                   "q=0.9,image/avif,image/webp,*/*;q=0.8"),
+        "Accept-Language": "en-IN,en;q=0.9",
+        "Referer": "https://www.myntra.com/",
+        "Upgrade-Insecure-Requests": "1",
+        # These two help mimic normal browser fetches
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Mode": "navigate",
+    })
+
+    # 2. Hit the homepage to pick up cookies
+    homepage = session.get("https://www.myntra.com/")
+    homepage.raise_for_status()
+
+    # 3. Now fetch the actual product page
+    resp = session.get(url)
+    resp.raise_for_status()
+    html = resp.text
+    print(html)
+
+    soup = BeautifulSoup(html, "html.parser")
 
     # Find all JSON-LD scripts and pick the one where "@type": "Product"
     product_data = None
