@@ -54,6 +54,8 @@ async def process_person(test: test):
         response = Test.action2()
     elif(test.number == 3):
         response = Test.action3()
+    elif(test.number == 4):
+        response = Test.action4()
     return response
 
 
