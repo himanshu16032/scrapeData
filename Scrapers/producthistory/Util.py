@@ -46,8 +46,9 @@ class Producthistory:
             logging.info("→ URL submitted; waiting for JSON-LD…")
 
             # 5) Wait up to 20s for the JSON-LD <script> to appear in the DOM
-            self.driver.implicitly_wait(10)
-            time.sleep(1)  # Small pause for content injection
+            print("Pausing for 10 seconds…")
+            time.sleep(10)  # ❌ Not ideal, but guarantees the delay
+            print("→ Resuming execution.")
 
             html = self.driver.page_source
             logging.info("Captured HTML (%d chars)", len(html))
