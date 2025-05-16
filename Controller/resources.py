@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 
 from Controller.pojo.LinkDataResponse import getLinkDataResponse
 from Controller.pojo.LinkDataRequest import getLinkDataRequest, test
+from Scrapers.producthistory import Myntra
 
 # from Service.MyntraDataScrapeService import init_browser, close_browser
 import uvicorn
@@ -42,8 +43,25 @@ async def health():
     return JSONResponse({"status": "ok"})
 @app.post("/getLinkData", response_model=getLinkDataResponse)
 async def process_person(getLinkDataRequest: getLinkDataRequest):
-    response = await MyntraDataScrapeService.action(getLinkDataRequest)
-    return response
+    return delegator(getLinkDataRequest)
+
+
+
+
+
+
+def delegator(getLinkDataRequest: getLinkDataRequest):
+    if "myntra" in getLinkDataRequest.link:
+        return Myntra.action(getLinkDataRequest.link)
+
+
+
+
+
+
+
+
+
 
 
 @app.post("/getLinkData2", response_model=getLinkDataResponse)
