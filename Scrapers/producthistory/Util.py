@@ -27,7 +27,7 @@ class Producthistory:
         self.wait = WebDriverWait(self.driver, timeout)
         print("Chrome launched (headless=%s), timeout=%ds", headless, timeout)
 
-    def get_page_html(self, product_url: str) -> str | None:
+    def get_page_html(self, product_url: str):
         try:
             print("→ Navigating to producthistory.com")
             self.driver.get("https://producthistory.in/")
