@@ -9,6 +9,10 @@ Async Playwright util for ProductHistory scraping:
 """
 import asyncio
 from playwright.async_api import async_playwright, Browser, Page
+from datetime import datetime
+
+def log(msg: str):
+    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}")
 
 class ProductHistoryPlaywrightAsync:
     def __init__(self, headless: bool = True, timeout: int = 20):
@@ -36,25 +40,31 @@ class ProductHistoryPlaywrightAsync:
         if not self.page:
             raise RuntimeError("start() must be called before get_page_html()")
         try:
-            print("→ Navigating to producthistory.in")
+            log("→ Navigating to producthistory.in")
             await self.page.goto("https://producthistory.in/", timeout=self.timeout)
 
-            print("→ Waiting for search input selector")
-            await self.page.wait_for_selector("#productUrl", timeout=self.timeout)
+            log("→ Waiting for search input selector")
 
-            print(f"→ Filling product URL: {product_url}")
+            await self.page.wait_for_selector("#productUrl", timeout=self.timeout)
+            log("----------------------------------------")
+            log("     ")
+            log(await self.page.content())
+            log("----------------------------------------")
+            log("     ")
+            log(f"→ Filling product URL: {product_url}")
             await self.page.fill("#productUrl", product_url)
             await self.page.press("#productUrl", "Enter")
 
-            print("→ URL submitted; sleeping for 10 seconds…")
+            log("→ URL submitted; sleeping for 10 seconds…")
             # Explicit 10-second delay
             await self.page.wait_for_timeout(10_000)
 
             html = await self.page.content()
-            print(f"Captured HTML length: {len(html)} chars")
+            log(html)
+            log(f"Captured HTML length: {len(html)} chars")
             return html
         except Exception as e:
-            print(f"Error fetching page HTML: {e}")
+            log(f"Error fetching page HTML: {e}")
             return None
 
     async def close(self) -> None:
@@ -63,7 +73,7 @@ class ProductHistoryPlaywrightAsync:
             await self.browser.close()
         if self._playwright:
             await self._playwright.stop()
-        print("Browser closed")
+        log("Browser closed")
 
 
 # Example usage
@@ -71,8 +81,8 @@ def run_example():
     async def _main():
         scraper = ProductHistoryPlaywrightAsync(headless=False, timeout=20)
         await scraper.start()
-        html = await scraper.get_page_html("https://www.myntra.com/handbags/caprese/caprese-floral-printed-sling-bag-with-pouch/30777601/buy")
-        print(html[:200], "...")
+        html = await scraper.get_page_html("https://www.myntra.com/handbags/caprese/caprese-floral-loged-sling-bag-with-pouch/30777601/buy")
+        log(html[:200], "...")
         await scraper.close()
 
     try:
