@@ -28,7 +28,11 @@ class ProductHistoryPlaywrightAsync:
         self._playwright = await async_playwright().start()
         self.browser = await self._playwright.chromium.launch(
             headless=self.headless,
-            args=["--no-sandbox", "--disable-dev-shm-usage"]
+               args=[
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage"
+    ]
         )
         self.page = await self.browser.new_page()
         # Set default timeouts
