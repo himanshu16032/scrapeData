@@ -13,11 +13,7 @@ async def action(link: str):
     await scraperPlayWright.start()
     html = await scraperPlayWright.get_page_html(link)
     await scraperPlayWright.close()
-    try:
-        return extract_price_and_description(html)
-    except:
-        print(html)
-        return None
+    return extract_price_and_description(html)
 
 
 def extract_price_and_description(html: str):
