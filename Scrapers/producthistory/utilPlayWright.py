@@ -31,7 +31,7 @@ class ProductHistoryPlaywrightAsync:
         self.page.set_default_navigation_timeout(self.timeout)
         self.page.set_default_timeout(self.timeout)
 
-    async def get_page_html(self, product_url: str) -> str | None:
+    async def get_page_html(self, product_url: str):
         """Navigate to producthistory, submit URL, wait, and return HTML."""
         if not self.page:
             raise RuntimeError("start() must be called before get_page_html()")
