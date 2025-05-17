@@ -5,7 +5,7 @@ from Controller.pojo.LinkDataResponse import getLinkDataResponse
 from Scrapers.producthistory.utilPlayWright import ProductHistoryPlaywrightAsync
 
 # productHistoryScraper = Producthistory(headless=True, timeout=40)
-scraperPlayWright = ProductHistoryPlaywrightAsync(headless=True, timeout=20)
+scraperPlayWright = ProductHistoryPlaywrightAsync(headless=False, timeout=20)
 
 
 async def action(link: str):
