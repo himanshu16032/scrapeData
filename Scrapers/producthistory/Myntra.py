@@ -4,7 +4,7 @@ from Receiver.getUrlHtmlDataReceiver import *
 from Controller.pojo.LinkDataResponse import getLinkDataResponse
 from Scrapers.producthistory.utilPlayWright import ProductHistoryPlaywrightAsync
 
-productHistoryScraper = Producthistory(headless=True, timeout=40)
+# productHistoryScraper = Producthistory(headless=True, timeout=40)
 scraperPlayWright = ProductHistoryPlaywrightAsync(headless=True, timeout=20)
 
 
