@@ -1,7 +1,7 @@
 
 import time
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -23,7 +23,7 @@ class Producthistory:
         chrome_opts.add_argument("--no-sandbox")
         chrome_opts.add_argument("--disable-dev-shm-usage")
 
-        self.driver = webdriver.Firefox(options=chrome_opts)
+        self.driver = webdriver.Chrome(options=chrome_opts)
         self.wait = WebDriverWait(self.driver, timeout)
         print("Chrome launched (headless=%s), timeout=%ds", headless, timeout)
 
