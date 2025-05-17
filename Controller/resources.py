@@ -43,7 +43,7 @@ async def health():
     return JSONResponse({"status": "ok"})
 @app.post("/getLinkData", response_model=getLinkDataResponse)
 async def process_person(getLinkDataRequest: getLinkDataRequest):
-    return delegator(getLinkDataRequest)
+    return await delegator(getLinkDataRequest)
 
 
 

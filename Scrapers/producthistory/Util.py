@@ -15,7 +15,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 #     format="%(asctime)s [%(levelname)s]: %(message)s",
 #     datefmt="%Y-%m-%d %H:%M:%S"
 # )
-CHROME_PATH = "/usr/bin/google-chrome-stable"
+# CHROME_PATH = "/usr/bin/google-chrome-stable"
 class Producthistory:
     def __init__(self, headless: bool = True, timeout: int = 20):
         chrome_opts = Options()
@@ -24,7 +24,7 @@ class Producthistory:
         chrome_opts.add_argument("--disable-blink-features=AutomationControlled")
         chrome_opts.add_argument("--no-sandbox")
         chrome_opts.add_argument("--disable-dev-shm-usage")
-        chrome_opts.binary_location = CHROME_PATH
+        # chrome_opts.binary_location = CHROME_PATH
 
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_opts)
         self.wait = WebDriverWait(self.driver, timeout)

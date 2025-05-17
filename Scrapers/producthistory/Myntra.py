@@ -2,13 +2,17 @@ from Scrapers.producthistory.Util import Producthistory
 from bs4 import BeautifulSoup
 from Receiver.getUrlHtmlDataReceiver import *
 from Controller.pojo.LinkDataResponse import getLinkDataResponse
+from Scrapers.producthistory.utilPlayWright import ProductHistoryPlaywrightAsync
 
 productHistoryScraper = Producthistory(headless=True, timeout=40)
+scraperPlayWright = ProductHistoryPlaywrightAsync(headless=True, timeout=20)
 
 
-def action(link: str):
-    print("got link to scrape")
-    html = productHistoryScraper.get_page_html(link)
+async def action(link: str):
+    print("got link to scrape", link)
+    await scraperPlayWright.start()
+    html = await scraperPlayWright.get_page_html(link)
+    await scraperPlayWright.close()
     return extract_price_and_description(html)
 
 
