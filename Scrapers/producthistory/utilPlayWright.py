@@ -46,11 +46,11 @@ class ProductHistoryPlaywrightAsync:
             log("→ Waiting for search input selector")
 
             await self.page.wait_for_selector("#productUrl", timeout=self.timeout)
-            log("----------------------------------------")
-            log("     ")
-            log(await self.page.content())
-            log("----------------------------------------")
-            log("     ")
+            # log("----------------------------------------")
+            # log("     ")
+            # log(await self.page.content())
+            # log("----------------------------------------")
+            # log("     ")
             log(f"→ Filling product URL: {product_url}")
             await self.page.fill("#productUrl", product_url)
             await self.page.press("#productUrl", "Enter")
@@ -60,7 +60,7 @@ class ProductHistoryPlaywrightAsync:
             await self.page.wait_for_timeout(10_000)
 
             html = await self.page.content()
-            log(html)
+            # log(html)
             log(f"Captured HTML length: {len(html)} chars")
             return html
         except Exception as e:
