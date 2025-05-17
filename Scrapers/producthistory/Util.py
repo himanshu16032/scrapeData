@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 # ✅ Configure logging to print timestamps
 # logging.basicConfig(
@@ -23,7 +25,7 @@ class Producthistory:
         chrome_opts.add_argument("--no-sandbox")
         chrome_opts.add_argument("--disable-dev-shm-usage")
 
-        self.driver = webdriver.Chrome(options=chrome_opts)
+        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_opts)
         self.wait = WebDriverWait(self.driver, timeout)
         print("Chrome launched (headless=%s), timeout=%ds", headless, timeout)
 
