@@ -40,36 +40,44 @@ class ProductHistoryPlaywrightAsync:
         self.page.set_default_timeout(self.timeout)
 
     async def get_page_html(self, product_url: str):
-        """Navigate to producthistory, submit URL, wait, and return HTML."""
-        if not self.page:
-            raise RuntimeError("start() must be called before get_page_html()")
-        try:
-            log("→ Navigating to producthistory.in")
-            await self.page.goto("https://producthistory.in/", timeout=self.timeout)
+        await self.page.goto("https://producthistory.in/", timeout=self.timeout)
+        await self.page.wait_for_load_state("networkidle", timeout=self.timeout)
 
-            log("→ Waiting for search input selector")
+        input_loc = self.page.locator("#productUrl")
+        await input_loc.scroll_into_view_if_needed()
+        await input_loc.wait_for(state="visible", timeout=self.timeout)
+        await input_loc.wait_for(state="enabled", timeout=self.timeout)
+        await self.page.screenshot(path="before_fill.png")
 
-            await self.page.wait_for_selector("#productUrl", timeout=self.timeout)
-            log("----------------------------------------")
-            log("     ")
-            log(await self.page.content())
-            log("----------------------------------------")
-            log("     ")
-            log(f"→ Filling product URL: {product_url}")
-            await self.page.fill("#productUrl", product_url)
-            await self.page.press("#productUrl", "Enter")
+        # Try the normal fill
+        await input_loc.click()
+        await input_loc.fill(product_url)
 
-            log("→ URL submitted; sleeping for 10 seconds…")
-            # Explicit 10-second delay
-            await self.page.wait_for_timeout(10_000)
+        # Fallback: force the DOM value if fill didn’t stick
+        await self.page.evaluate(
+            """(selector, value) => {
+                 const el = document.querySelector(selector);
+                 if (el) {
+                   el.value = value;
+                   el.dispatchEvent(new Event('input', { bubbles: true }));
+                 }
+               }""",
+            "#productUrl",
+            product_url
+        )
 
-            html = await self.page.content()
-            log(html)
-            log(f"Captured HTML length: {len(html)} chars")
-            return html
-        except Exception as e:
-            log(f"Error fetching page HTML: {e}")
-            return None
+        await self.page.screenshot(path="after_fill.png")
+
+        # Submit
+        await self.page.keyboard.press("Enter")
+
+        # Let the results render
+        await self.page.wait_for_timeout(10_000)
+
+        html = await self.page.content()
+        await self.page.screenshot(path="final_page.png")
+        return html
+
 
     async def close(self) -> None:
         """Close the browser and Playwright instance."""
