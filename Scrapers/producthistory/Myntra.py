@@ -5,11 +5,12 @@ from Controller.pojo.LinkDataResponse import getLinkDataResponse
 from Scrapers.producthistory.utilPlayWright import ProductHistoryPlaywrightAsync
 
 # productHistoryScraper = Producthistory(headless=True, timeout=40)
-scraperPlayWright = ProductHistoryPlaywrightAsync(headless=False, timeout=20)
+
 
 
 async def action(link: str):
     print("got link to scrape", link)
+    scraperPlayWright = ProductHistoryPlaywrightAsync(headless=True, timeout=40)
     await scraperPlayWright.start()
     html = await scraperPlayWright.get_page_html(link)
     await scraperPlayWright.close()
