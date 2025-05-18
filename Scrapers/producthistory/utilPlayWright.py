@@ -28,7 +28,7 @@ class ProductHistoryPlaywrightAsync:
     async def start(self) -> None:
         """Launch the Playwright browser and open a new page."""
         self._playwright = await async_playwright().start()
-        self.browser = await self._playwright.chromium.launch(
+        self.browser = await self._playwright.firefox.launch(
             headless=self.headless,
             args=[
                 "--no-sandbox",
