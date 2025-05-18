@@ -11,8 +11,10 @@ import asyncio
 from playwright.async_api import async_playwright, Browser, Page
 from datetime import datetime
 
+
 def log(msg: str):
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}")
+
 
 class ProductHistoryPlaywrightAsync:
     def __init__(self, headless: bool = True, timeout: int = 20):
@@ -28,11 +30,11 @@ class ProductHistoryPlaywrightAsync:
         self._playwright = await async_playwright().start()
         self.browser = await self._playwright.chromium.launch(
             headless=self.headless,
-               args=[
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage"
-    ]
+            args=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage"
+            ]
         )
         self.page = await self.browser.new_page()
         # Set default timeouts
@@ -50,6 +52,7 @@ class ProductHistoryPlaywrightAsync:
             log("→ Waiting for search input selector")
 
             await self.page.wait_for_selector("#productUrl", timeout=self.timeout)
+            await self.page.wait_for_timeout(3_000)
             log("----------------------------------------")
             log("     ")
             log(await self.page.content())
@@ -57,7 +60,7 @@ class ProductHistoryPlaywrightAsync:
             log("     ")
             log(f"→ Filling product URL: {product_url}")
             await self.page.type("#productUrl", product_url)
-            await self.page.click("#searchButton",timeout=self.timeout)
+            await self.page.click("#searchButton", timeout=self.timeout)
 
             log("→ URL submitted; sleeping for 10 seconds…")
             # Explicit 10-second delay
@@ -85,7 +88,8 @@ def run_example():
     async def _main():
         scraper = ProductHistoryPlaywrightAsync(headless=False, timeout=20)
         await scraper.start()
-        html = await scraper.get_page_html("https://www.myntra.com/handbags/caprese/caprese-floral-loged-sling-bag-with-pouch/30777601/buy")
+        html = await scraper.get_page_html(
+            "https://www.myntra.com/handbags/caprese/caprese-floral-loged-sling-bag-with-pouch/30777601/buy")
         # log(html[:200], "...")
         await scraper.close()
 
@@ -95,6 +99,7 @@ def run_example():
         # In case event loop is already running (e.g., Colab/Jupyter)
         loop = asyncio.get_event_loop()
         loop.run_until_complete(_main())
+
 
 if __name__ == '__main__':
     run_example()
