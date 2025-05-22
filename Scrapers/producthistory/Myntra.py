@@ -5,11 +5,12 @@ from Controller.pojo.LinkDataResponse import getLinkDataResponse
 from Scrapers.producthistory.utilPlayWright import ProductHistoryPlaywrightAsync
 
 # productHistoryScraper = Producthistory(headless=True, timeout=40)
+from Service.LoggerService import  log_info
 
 
 
 async def action(link: str):
-    print("got link to scrape", link)
+    log_info("got link to scrape "+ link)
     scraperPlayWright = ProductHistoryPlaywrightAsync(headless=True, timeout=40)
     await scraperPlayWright.start()
     html = await scraperPlayWright.get_page_html(link)
@@ -45,12 +46,12 @@ def extract_price_and_description(html: str):
         el = soup.find('div', id=stat_id)
         stats[stat_id] = el.get_text(strip=True) if el else None
 
-    # Print everything out
-    print("Product Name:   ", product_name)
-    print("Current Price:  ", current_price)
-    print("Last Updated:   ", last_updated)
-    print("Highest MRP:    ", highest_mrp)
+    # log_info everything out
+    log_info("Product Name:   "+ product_name)
+    log_info("Current Price:  "+ current_price)
+    log_info("Last Updated:   "+ last_updated)
+    log_info("Highest MRP:    "+ highest_mrp)
     return getLinkDataResponse(description=product_name, price=str(convert_price_to_decimal(current_price)))
-    # print("Stats:")
+    # log_info("Stats:")
     # for k, v in stats.items():
-    #     print(f"  {k}: {v}")
+    #     log_info(f"  {k}: {v}")

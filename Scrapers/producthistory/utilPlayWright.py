@@ -10,10 +10,10 @@ Async Playwright util for ProductHistory scraping:
 import asyncio
 from playwright.async_api import async_playwright, Browser, Page
 from datetime import datetime
-
+from Service.LoggerService import log_info,log_error
 
 def log(msg: str):
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}")
+    log_info(msg)
 
 
 class ProductHistoryPlaywrightAsync:

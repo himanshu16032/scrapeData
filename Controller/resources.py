@@ -34,12 +34,13 @@ from Service import Test
 # @app.on_event("shutdown")
 # async def on_shutdown():
 #     await close_browser()
-
+from Service.LoggerService import log_info
 
 
 app = FastAPI()
 @app.get("/", include_in_schema=False)
 async def health():
+    log_info("health check ok")
     return JSONResponse({"status": "ok"})
 @app.post("/getLinkData", response_model=getLinkDataResponse)
 async def process_person(getLinkDataRequest: getLinkDataRequest):
