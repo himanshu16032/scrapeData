@@ -47,7 +47,10 @@ async def process_person(getLinkDataRequest: getLinkDataRequest):
     return await delegator(getLinkDataRequest)
 
 
-
+@app.get("/healthCheck", include_in_schema=False)
+async def health():
+    log_info("health check ok for /healthcheck")
+    return JSONResponse({"status": "ok"})
 
 
 
